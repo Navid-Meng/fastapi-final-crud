@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %} Update{% endblock title %}
+{% block heading %} Update Product {% endblock heading %} 
+{% block content %}
+    <form id="updateProductForm">
+        <div class="mb-3">
+            <label for="productId" class="form-label">Product Id</label>
+            <input
+                type="text"
+                name="productId"
+                id="productId"
+                class="form-control"
+                value="{{product.id}}"
+                disabled
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="productName" class="form-label">Product name</label>
+            <input
+                type="text"
+                name="productName"
+                id="productName"
+                class="form-control"
+                value="{{product.productName}}"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input
+                type="text"
+                name="price"
+                id="price"
+                class="form-control"
+                value="{{product.price}}"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="stockQty" class="form-label">Stock Qty</label>
+            <input
+                type="text"
+                name="stockQty"
+                id="stockQty"
+                class="form-control"
+                value="{{product.stockQty}}"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="categoryId" class="form-label">Category Id</label>
+            <input
+                type="text"
+                name="categoryId"
+                id="categoryId"
+                class="form-control"
+                value="{{product.categoryId}}"
+                required
+            />
+        </div>
+        <button type="submit"  class="btn btn-success">Update</button>
+    </form>
+
+    <script>
+        document.getElementById('updateProductForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            let productId = document.getElementById('productId').value;
+            let productName = document.getElementById('productName').value;
+            let price = document.getElementById('price').value;
+            let stockQty = document.getElementById('stockQty').value;
+            let categoryId = document.getElementById('categoryId').value;
+
+            let formData = {
+                productName: productName,
+                price: parseFloat(price),
+                stockQty: parseInt(stockQty),
+                categoryId: parseInt(categoryId)
+            };
+            console.log("debug")
+            try {
+                let response = await fetch('/api/products/${productId}', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    // Redirect to /api/products after successful creation
+                    window.location.href = '/products/read';
+                } else {
+                    let data = await response.json();
+                    document.getElementById('responseMessage').innerText = data.detail;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('responseMessage').innerText = 'An error occurred. Please try again.';
+            }
+        });
+    </script>
+{% endblock  %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %} Create{% endblock title %}
+{% block heading %} Create Product {% endblock heading %} Create Product
+{% block content %}
+    <form id="createProductForm">
+        <div class="mb-3">
+            <label for="productName" class="form-label">Product name</label>
+            <input
+                type="text"
+                name="productName"
+                id="productName"
+                class="form-control"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input
+                type="text"
+                name="price"
+                id="price"
+                class="form-control"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="stockQty" class="form-label">Stock Qty</label>
+            <input
+                type="text"
+                name="stockQty"
+                id="stockQty"
+                class="form-control"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="categoryId" class="form-label">Category Id</label>
+            <input
+                type="text"
+                name="categoryId"
+                id="categoryId"
+                class="form-control"
+                required
+            />
+        </div>
+        <button type="submit"  class="btn btn-primary">Create</button>
+    </form>
+
+    <script>
+        document.getElementById('createProductForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            let productName = document.getElementById('productName').value;
+            let price = document.getElementById('price').value;
+            let stockQty = document.getElementById('stockQty').value;
+            let categoryId = document.getElementById('categoryId').value;
+
+            let formData = {
+                productName: productName,
+                price: parseFloat(price),
+                stockQty: parseInt(stockQty),
+                categoryId: parseInt(categoryId)
+            };
+            console.log("debug")
+            try {
+                let response = await fetch('/api/products/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    // Redirect to /api/products after successful creation
+                    window.location.href = '/products/read';
+                } else {
+                    let data = await response.json();
+                    document.getElementById('responseMessage').innerText = data.detail;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('responseMessage').innerText = 'An error occurred. Please try again.';
+            }
+        });
+    </script>
+{% endblock  %}
