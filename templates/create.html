@@ -2,6 +2,10 @@
 {% block title %} Create{% endblock title %}
 {% block heading %} Create Product {% endblock heading %} Create Product
 {% block content %}
+
+    <div id="responseMessage">
+        
+    </div>
     <form id="createProductForm">
         <div class="mb-3">
             <label for="productName" class="form-label">Product name</label>
@@ -75,12 +79,13 @@
                     // Redirect to /api/products after successful creation
                     window.location.href = '/products/read';
                 } else {
-                    let data = await response.json();
-                    document.getElementById('responseMessage').innerText = data.detail;
+                    //let data = await response.json();
+                    const responseMessage = document.getElementById('responseMessage');
+                    responseMessage.innerText = `Product name "${productName}" is already exists`;
+                    responseMessage.classList.add('alert', "alert-danger");
                 }
             } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('responseMessage').innerText = 'An error occurred. Please try again.';
+                console.log(error);
             }
         });
     </script>

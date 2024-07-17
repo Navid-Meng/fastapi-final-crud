@@ -2,7 +2,7 @@
 {% block title %} Update{% endblock title %}
 {% block heading %} Update Product {% endblock heading %} 
 {% block content %}
-    <form id="updateProductForm">
+    <form id="updateProductForm" method="POST">
         <div class="mb-3">
             <label for="productId" class="form-label">Product Id</label>
             <input
@@ -61,7 +61,7 @@
         </div>
         <button type="submit"  class="btn btn-success">Update</button>
     </form>
-
+    <div id="responseMessage"></div>
     <script>
         document.getElementById('updateProductForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -71,16 +71,16 @@
             let price = document.getElementById('price').value;
             let stockQty = document.getElementById('stockQty').value;
             let categoryId = document.getElementById('categoryId').value;
-
+            
             let formData = {
                 productName: productName,
                 price: parseFloat(price),
                 stockQty: parseInt(stockQty),
                 categoryId: parseInt(categoryId)
             };
-            console.log("debug")
+
             try {
-                let response = await fetch('/api/products/${productId}', {
+                let response = await fetch(`/api/products/${parseInt(productId)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -91,7 +91,7 @@
                 if (response.ok) {
                     // Redirect to /api/products after successful creation
                     window.location.href = '/products/read';
-                } else {
+                } else {  
                     let data = await response.json();
                     document.getElementById('responseMessage').innerText = data.detail;
                 }

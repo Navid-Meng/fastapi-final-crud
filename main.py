@@ -9,10 +9,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 
 
-
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# adding this line if css is needed
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -66,10 +66,14 @@ async def read_categories(category_id: int, db: db_dependency):
 
 @app.post('/api/products/', status_code=status.HTTP_201_CREATED)
 async def create_product(product: ProductBase, db: db_dependency):
+    db_check = db.query(models.Product).filter(models.Product.productName == product.productName).first()
+    if db_check:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Product name '{product.productName}' already exists")
     db_product = models.Product(productName=product.productName, price=product.price, stockQty=product.stockQty, categoryId=product.categoryId)
     db.add(db_product)
     db.commit()
     return {"message": f"Product created successfully."}
+    
 
 # bulk 
 @app.post('/api/products/bulk', status_code=status.HTTP_200_OK)
@@ -104,7 +108,8 @@ async def update_category(db: db_dependency, category_id: int, new_category_name
     return {"message": f"Category with id {category_id} updated successfully"}
 
 @app.put('/api/products/{product_id}', status_code=status.HTTP_200_OK)
-async def update_product(db: db_dependency, product_id: int, product: ProductBase):
+async def update_product(product_id: int, product: ProductBase, db: db_dependency):
+
     db_product = db.query(models.Product).filter(models.Product.id == product_id).first()
     if db_product is None:
         raise HTTPException(f"Product with id {product_id} not found")
@@ -112,9 +117,13 @@ async def update_product(db: db_dependency, product_id: int, product: ProductBas
     db_product.price = product.price
     db_product.stockQty = product.stockQty
     db_product.categoryId = product.categoryId
-    db.add(db_product)
-    db.commit()
-    return {"message": f"Category with id {product_id} updated successfully"}
+
+    try:
+        db.commit()
+        return {"message": f"Category with id {product_id} updated successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @app.delete("/api/products/{product_id}", status_code=status.HTTP_200_OK)
 async def delete_product(product_id: int, db: db_dependency):
