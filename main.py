@@ -109,10 +109,13 @@ async def update_category(db: db_dependency, category_id: int, new_category_name
 
 @app.put('/api/products/{product_id}', status_code=status.HTTP_200_OK)
 async def update_product(product_id: int, product: ProductBase, db: db_dependency):
-
+    # db_check = db.query(models.Product).filter(models.Product.productName == product.productName).first()
+    # if db_check:
+    #     raise HTTPException(f"Product name {product.productName} is already exists")
     db_product = db.query(models.Product).filter(models.Product.id == product_id).first()
     if db_product is None:
         raise HTTPException(f"Product with id {product_id} not found")
+    
     db_product.productName = product.productName
     db_product.price = product.price
     db_product.stockQty = product.stockQty

@@ -2,6 +2,7 @@
 {% block title %} Update{% endblock title %}
 {% block heading %} Update Product {% endblock heading %} 
 {% block content %}
+    <div id="responseMessage"></div>
     <form id="updateProductForm" method="POST">
         <div class="mb-3">
             <label for="productId" class="form-label">Product Id</label>
@@ -61,7 +62,7 @@
         </div>
         <button type="submit"  class="btn btn-success">Update</button>
     </form>
-    <div id="responseMessage"></div>
+    
     <script>
         document.getElementById('updateProductForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -92,8 +93,9 @@
                     // Redirect to /api/products after successful creation
                     window.location.href = '/products/read';
                 } else {  
-                    let data = await response.json();
-                    document.getElementById('responseMessage').innerText = data.detail;
+                    const responseMessage = document.getElementById('responseMessage');
+                    responseMessage.innerText = `Product name "${productName}" already exists`;
+                    responseMessage.classList.add('alert', 'alert-danger');
                 }
             } catch (error) {
                 console.error('Error:', error);
