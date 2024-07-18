@@ -50,15 +50,15 @@
             />
         </div>
         <div class="mb-3">
-            <label for="categoryId" class="form-label">Category Id</label>
-            <input
-                type="text"
-                name="categoryId"
-                id="categoryId"
-                class="form-control"
-                value="{{product.categoryId}}"
-                required
-            />
+            <label for="categoryId" class="form-label">Category</label>
+            <select id="categoryId" name="categoryId" class="form-select" required>
+                <option value=" {{current_category.id}} ">{{ current_category.categoryName }}</option>
+                {% for category in categories %}
+                    {% if not category.id == current_category.id  %}
+                    <option value="{{ category.id }}">{{ category.categoryName }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
         </div>
         <button type="submit"  class="btn btn-success">Update</button>
     </form>

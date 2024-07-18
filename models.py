@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean
 from database import Base
 from sqlalchemy.orm import relationship
 
@@ -10,6 +10,7 @@ class Product(Base):
     price = Column(Float, nullable=False)
     stockQty = Column(Integer, nullable=False)
     categoryId = Column(Integer, ForeignKey('categories.id'), nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
     
     category = relationship('Category', backref='products')
     
