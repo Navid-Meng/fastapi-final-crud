@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean
-from database import Base
+from sqlalchemy import Column, Integer, Float, ForeignKey, Boolean, String
+from ..database import Base
 from sqlalchemy.orm import relationship
+
 
 class Product(Base):
     __tablename__ = 'products'
@@ -13,10 +14,3 @@ class Product(Base):
     is_active = Column(Boolean, default=True, nullable=False)
     
     category = relationship('Category', backref='products')
-    
-    
-
-class Category(Base):
-    __tablename__ = 'categories'
-    id = Column(Integer, primary_key=True)
-    categoryName = Column(String(255), nullable=False)

@@ -30,3 +30,28 @@ function fetchProducts(){
         });
 }
 document.addEventListener('DOMContentLoaded', fetchProducts);
+
+productTable.addEventListener('click', async function(event){
+    if (event.target.classList.contains('delete-product')){
+        try{
+            fetch(`/api/products/${productId}`, {
+                method: 'DELETE',
+                header: {
+                    'Content-Type': 'application/json'
+                }
+            })    
+            .then(response => {
+                if (!response.ok){
+                    throw new Error('Network response was not ok');
+                }
+                window.location.href = '/products/read'
+            })
+            .catch(error => {
+                console.error('Error deleting product:', error);
+                // Optionally display an error message or handle the error
+            });
+        } catch(error){
+            console.error("Error delting product: ", error);
+        }
+    }
+})

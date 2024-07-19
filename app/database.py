@@ -8,4 +8,11 @@ engine = create_engine(URL_DATABASE)
 
 SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
 
-Base = declarative_base()
+Base = declarative_base() # for ORM purposes
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
