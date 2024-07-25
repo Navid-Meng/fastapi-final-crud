@@ -42,15 +42,32 @@ def get_product_by_id(product_id: int, db: db_dependency):
         return product_data
 
 def create_product(product: ProductBase, db: db_dependency):
-    db_check = db.query(Product).filter(Product.productName == product.productName).first()
-    if db_check:
-        if db_check.is_active:
-            return False
+    print("functon create product called")
+    active_product = db.query(Product).filter(
+        Product.productName == product.productName,
+        Product.is_active == True
+        ).first()
+    
+    if active_product:
+        print(f"Active product found with name : {active_product.productName}")
+        return False
+    
+    inactive_product = db.query(Product).filter(
+        Product.productName == product.productName,
+        Product.is_active == False
+        )
+    # if db_check:
+    #     print("inside checking")
+    #     print(db_check.id)
+    #     if db_check.is_active:
+    #         print(db_check.is_active)
+    #         return False
     db_product = Product(
         productName = product.productName,
         price = product.price,
         stockQty = product.stockQty,
-        categoryId = product.categoryId
+        categoryId = product.categoryId,
+        productCode = product.productCode
     )
 
     db.add(db_product)

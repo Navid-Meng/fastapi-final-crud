@@ -8,6 +8,7 @@ class ProductBase(BaseModel):
     stockQty: int
     categoryId: int
     is_active: Optional[bool] = True
+    productCode: str
     
 class ProductOut(BaseModel):
     id: int
@@ -16,3 +17,4 @@ class ProductOut(BaseModel):
     stockQty: int
     categoryId: int
     is_active: Optional[bool] = True
+    productCode: str

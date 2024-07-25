@@ -15,7 +15,9 @@ db_dependency = Annotated[Session, Depends(get_db)]
     - Depends(get_db), ensuring that before any endpoints used the db_dependency, it will execute the get_db first
 '''
 
-router  = APIRouter()
+router  = APIRouter(
+    tags={"Category"}
+)
 
 # read all categories
 @router.get('/api/categories', status_code=status.HTTP_200_OK)
@@ -36,7 +38,7 @@ async def read_category(category_id: int, db: db_dependency):
 #     return {"message": f"Category created successfully."}
 
 # create a new category
-@router.post('/api/categories/', status_code=status.HTTP_201_CREATED)
+@router.post('/api/categories', status_code=status.HTTP_201_CREATED)
 async def create_category(category: CategoryBase, db: db_dependency):
     return category_controller.create_category(db=db, category=category)
 

@@ -8,7 +8,9 @@ from ...models.category import Category
 from ...models.product import Product
 from sqlalchemy.orm import Session
 
-router = APIRouter()
+router = APIRouter(
+    tags={"HTML api router for product"}
+)
 
 templates = Jinja2Templates(directory="app/templates")
 

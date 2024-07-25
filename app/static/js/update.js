@@ -1,4 +1,4 @@
-document.getElementById('updateProductForm').addEventListener('submit', async function(event){
+document.getElementById('updateProductForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
     let productId = document.getElementById('productId').value;
@@ -6,32 +6,33 @@ document.getElementById('updateProductForm').addEventListener('submit', async fu
     let price = document.getElementById('price').value;
     let stockQty = document.getElementById('stockQty').value;
     let categoryId = document.getElementById('categoryId').value;
-
+    
     let formData = {
         productName: productName,
         price: parseFloat(price),
         stockQty: parseInt(stockQty),
         categoryId: parseInt(categoryId)
-    }
+    };
 
     try {
         let response = await fetch(`/api/products/${parseInt(productId)}`, {
             method: 'PUT',
-            method: {
+            headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
-        })
+        });``
 
-        if (response.ok){
-            window.location.href = '/products/read'
-        } else {
+        if (response.ok) {
+            // Redirect to /api/products after successful creation
+            window.location.href = '/products/read';
+        } else {  
             const responseMessage = document.getElementById('responseMessage');
             responseMessage.innerText = `Product name "${productName}" already exists`;
             responseMessage.classList.add('alert', 'alert-danger');
         }
-
-    } catch(error){
-        console.error(error);
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('responseMessage').innerText = 'An error occurred. Please try again.';
     }
-})
+});

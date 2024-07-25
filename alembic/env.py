@@ -9,8 +9,7 @@ from alembic import context
 # access to the values within the .ini file in use.
 config = context.config
 
-from ..app.models.product import Base
-
+from app.models import Base
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
